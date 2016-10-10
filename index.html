@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Snake</title>
+    <script src="lib/util.js"></script>
+    <script src="lib/layer.js"></script>
+    <script src="lib/snake.js"></script>
+    <script src="lib/point.js"></script>
+    <style>
+        canvas {border: 1px solid black;}
+        #canvas_container {
+            text-align: center;
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom:0;
+            width: 100%;
+            height: 100%;
+        }
+        canvas {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas_container">
+        <h1>Score: <span id="score">0</span></h1>
+        <canvas id="canvas">
+            <p>Ваш браузер не поддерживает canvas</p>
+        </canvas>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
