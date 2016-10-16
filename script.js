@@ -1,14 +1,11 @@
-window.onload = function() {
+var init = function () {
+    var layer, snake;
 
-  var layer = new Layer(
-    'canvas' // id selector
-  );
+    layer = new Layer('canvas');
+    layer.init();
 
-  layer.init();
-
-  var snake = new Snake(layer);
-  snake.setSpeed(1000);
-  snake.startlen = 5;
-  snake.addFood();
-  snake.init();
+    snake = new Snake(layer);
+    snake.init();
 };
+
+window.onload = init;
