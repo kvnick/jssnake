@@ -2,13 +2,10 @@
   "name": "jssnake",
   "version": "1.0.0",
   "description": "",
-  "main": "Gruntfile.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "nkorostelev@gmail.com",
   "license": "MIT",
   "devDependencies": {
-    "grunt-contrib-watch": "^1.0.0"
+    "gulp": "^4.0.2",
+    "gulp-connect": "^5.7.0"
   }
 }
