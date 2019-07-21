@@ -5,7 +5,12 @@
   "author": "nkorostelev@gmail.com",
   "license": "MIT",
   "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
     "gulp": "^4.0.2",
-    "gulp-connect": "^5.7.0"
+    "gulp-babel": "^8.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-connect": "^5.7.0",
+    "gulp-sass": "^4.0.2"
   }
 }

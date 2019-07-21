@@ -1,19 +1,44 @@
 const gulp = require('gulp'),
-      connect = require('gulp-connect');
+      connect = require('gulp-connect'),
+      babel = require('gulp-babel'),
+      concat = require('gulp-concat'),
+      sass = require('gulp-sass');
 
-function server(cb) {
+function styles() {
+    return gulp.src('./src/scss/style.scss')
+        .pipe(sass({outputStyle: 'expanded', precision: 10}).on('error', handleError))
+        .pipe(gulp.dest('./dest/css'));
+}
+
+function js() {
+    return gulp.src(['./src/js/util.js', './src/js/layer.js', './src/js/snake.js', './src/js/point.js', './src/js/script.js'])
+        .pipe(babel({
+            presets: ['@babel/env']
+        }))
+        .pipe(concat('scripts.js'))
+        .pipe(gulp.dest('./dest/js'))
+        .pipe(connect.reload())
+}
+
+function server(done) {
     connect.server({
         port: 9000,
         root: './',
+        livereload: true
     });
-
-    cb();
+    done();
 }
 
-function watch() {
-    let files = ['./lib/**', './index.html', './script.js'];
-    return gulp.watch(files, gulp.series(server));
+function watch(done) {
+    let files = ['./src/**', './index.html'];
+    gulp.watch(files, gulp.series('build'));
+    done();
 }
 
-gulp.task('default', gulp.series(server, watch));
+function handleError(error) {
+    console.log(error);
+}
+
+gulp.task('build', gulp.series(styles, js));
+gulp.task('default', gulp.series('build', server, watch));
 
