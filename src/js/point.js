@@ -7,10 +7,13 @@ class Point {
         this.x      = x;
         this.y      = y;
         this.color  = color;
-        this.fill   = color;
     }
 
     getCoords() {
         return { x: this.x, y: this.y };
+    }
+
+    getColor() {
+        return this.color;
     }
 }

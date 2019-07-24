@@ -24,6 +24,10 @@ canvas {
   height: 100%;
 }
 
+.game--with-layer {
+  border-color: indianred;
+}
+
 .game__title {
   text-transform: lowercase;
 }

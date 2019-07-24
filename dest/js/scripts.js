@@ -221,7 +221,8 @@ var Snake = function () {
         snakeColor: '#c3c3c3',
         foodColor: 'red',
         startlen: 5,
-        resetAfterEnd: false
+        resetAfterEnd: false,
+        noLayerCollision: false
       }, options);
       this.interval = "";
       this.speed = this.options.speed;
@@ -275,6 +276,10 @@ var Snake = function () {
     _createClass(Snake, [{
       key: "init",
       value: function init() {
+        if (this.options.noLayerCollision === false) {
+          this.layer.canvas.classList.add('game--with-layer');
+        }
+
         this.createSnake();
         this.layer.renderScore(0);
         this.setSpeed(this.getSpeed());
@@ -536,6 +541,13 @@ var Snake = function () {
         // add new head
         var newHead = new Point(this.getHead().x + this.stepX, this.getHead().y + this.stepY, this.options.snakeColor);
 
+        if (this.checkCollisionWithLayer(newHead) && this.options.noLayerCollision) {
+          var verticalBlockSize = this.layer.canvas.height / this.layer.blockSize,
+              horizontalBlockSize = this.layer.canvas.width / this.layer.blockSize;
+          newHead.x = newHead.x < 0 ? horizontalBlockSize - -newHead.x : Math.abs(newHead.x % horizontalBlockSize);
+          newHead.y = newHead.y < 0 ? verticalBlockSize - -newHead.y : Math.abs(newHead.y % verticalBlockSize);
+        }
+
         if (this.checkFood()) {
           this.eatFood();
           this.incSpeed();
@@ -557,31 +569,24 @@ var Snake = function () {
       }
     }, {
       key: "checkItselfCollision",
-      value: function checkItselfCollision(head, tailPoint) {
-        return head.x == tailPoint.x && head.y == tailPoint.y;
+      value: function checkItselfCollision(head, tail) {
+        return Util.isArray(tail) && tail.some(function (item) {
+          return head.x === item.x && head.y === item.y;
+        });
+      }
+    }, {
+      key: "checkCollisionWithLayer",
+      value: function checkCollisionWithLayer(head) {
+        var canvas = this.layer.canvas,
+            blockSize = this.layer.blockSize;
+        return head.x * blockSize + blockSize > canvas.width || head.y * blockSize + blockSize > canvas.height || head.x < 0 || head.y < 0;
       }
     }, {
       key: "checkCollision",
       value: function checkCollision() {
-        // collision function for rect
         var head = this.getHead(),
-            tail = this.getTail(),
-            canvas = this.layer.canvas,
-            blockSize = this.layer.blockSize;
-
-        for (var i = 1; i < tail.length; i++) {
-          if (this.checkItselfCollision(head, tail[i])) {
-            return true;
-          }
-        } // check collision with layer
-
-
-        if (head.x * blockSize + blockSize > canvas.width || head.y * blockSize + blockSize > canvas.height || head.x < 0 || head.y < 0) {
-          return true;
-        } // Beeep!
-
-
-        return false;
+            tail = this.getTail();
+        return this.checkItselfCollision(head, tail) || this.checkCollisionWithLayer(head) && !this.options.noLayerCollision;
       }
     }, {
       key: "generateFoodCoords",
@@ -623,7 +628,6 @@ function () {
     this.x = x;
     this.y = y;
     this.color = color;
-    this.fill = color;
   }
 
   _createClass(Point, [{
@@ -633,6 +637,11 @@ function () {
         x: this.x,
         y: this.y
       };
+    }
+  }, {
+    key: "getColor",
+    value: function getColor() {
+      return this.color;
     }
   }]);
 
@@ -652,7 +661,8 @@ window.addEventListener('DOMContentLoaded', function () {
         snake = new Snake(layer, {
       foodColor: 'lightgreen',
       snakeColor: 'white',
-      resetAfterEnd: true
+      resetAfterEnd: true,
+      noLayerCollision: false
     });
     layer.init();
     snake.init();

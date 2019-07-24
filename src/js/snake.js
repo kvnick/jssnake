@@ -35,7 +35,8 @@ const Snake = (() => {
                 snakeColor: '#c3c3c3',
                 foodColor: 'red',
                 startlen: 5,
-                resetAfterEnd: false
+                resetAfterEnd: false,
+                noLayerCollision: false
             }, options);
 
             this.interval = "";
@@ -53,24 +54,12 @@ const Snake = (() => {
 
             const checkButtons = (e) => {
                 switch(e.keyCode) {
-                    case BUTTONS.UP:
-                        this.move('up');
-                        break;
-                    case BUTTONS.DOWN:
-                        this.move('down');
-                        break;
-                    case BUTTONS.LEFT:
-                        this.move('left');
-                        break;
-                    case BUTTONS.RIGHT:
-                        this.move('right');
-                        break;
-                    case BUTTONS.RESET:
-                        this.reset();
-                        break;
-                    default:
-                        console.log('This command not found!');
-                        break;
+                    case BUTTONS.UP: this.move('up'); break;
+                    case BUTTONS.DOWN: this.move('down'); break;
+                    case BUTTONS.LEFT: this.move('left'); break;
+                    case BUTTONS.RIGHT: this.move('right'); break;
+                    case BUTTONS.RESET: this.reset(); break;
+                    default: console.log('This command not found!'); break;
                 }
             };
 
@@ -78,6 +67,10 @@ const Snake = (() => {
         }
 
         init() {
+            if (this.options.noLayerCollision === false) {
+                this.layer.canvas.classList.add('game--with-layer');
+            }
+
             this.createSnake();
             this.layer.renderScore(0);
             this.setSpeed(this.getSpeed());
@@ -312,6 +305,19 @@ const Snake = (() => {
                 this.options.snakeColor
             );
 
+            if (this.checkCollisionWithLayer(newHead) && this.options.noLayerCollision) {
+                let verticalBlockSize = this.layer.canvas.height / this.layer.blockSize,
+                    horizontalBlockSize = this.layer.canvas.width / this.layer.blockSize;
+
+                newHead.x = newHead.x < 0
+                    ? horizontalBlockSize - (-newHead.x)
+                    : Math.abs(newHead.x % horizontalBlockSize);
+
+                newHead.y = newHead.y < 0
+                    ? verticalBlockSize - (-newHead.y)
+                    : Math.abs(newHead.y % verticalBlockSize);
+            }
+
             if (this.checkFood()) {
                 this.eatFood();
                 this.incSpeed();
@@ -331,32 +337,26 @@ const Snake = (() => {
             }
         }
 
-        checkItselfCollision(head, tailPoint) {
-            return head.x == tailPoint.x &&
-                head.y == tailPoint.y;
+        checkItselfCollision(head, tail) {
+            return Util.isArray(tail) &&
+                tail.some(item => head.x === item.x && head.y === item.y);
+        }
+
+        checkCollisionWithLayer(head) {
+            let canvas = this.layer.canvas,
+                blockSize = this.layer.blockSize;
+
+            return head.x * blockSize + blockSize > canvas.width ||
+                head.y * blockSize + blockSize > canvas.height ||
+                head.x < 0 ||
+                head.y < 0;
         }
 
         checkCollision() {
-            // collision function for rect
-            let head = this.getHead(),
-                tail = this.getTail(),
-                canvas = this.layer.canvas,
-                blockSize = this.layer.blockSize;
+            let head = this.getHead(), tail = this.getTail();
 
-            for (let i = 1; i < tail.length; i++) {
-                if (this.checkItselfCollision(head, tail[i])) {
-                    return true;
-                }
-            }
-            // check collision with layer
-            if (head.x * blockSize + blockSize > canvas.width ||
-                head.y * blockSize + blockSize > canvas.height ||
-                head.x < 0 ||
-                head.y < 0) {
-                return true;
-            }
-            // Beeep!
-            return false;
+            return this.checkItselfCollision(head, tail) ||
+                (this.checkCollisionWithLayer(head) && ! this.options.noLayerCollision);
         }
 
         generateFoodCoords() {

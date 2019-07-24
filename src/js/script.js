@@ -10,7 +10,8 @@ window.addEventListener('DOMContentLoaded', () => {
         snake = new Snake(layer, {
             foodColor: 'lightgreen',
             snakeColor: 'white',
-            resetAfterEnd: true
+            resetAfterEnd: true,
+            noLayerCollision: false
         });
 
         layer.init();

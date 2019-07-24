@@ -26,6 +26,10 @@ canvas {
     height: 100%;
     height: 100%;
 
+    &--with-layer {
+        border-color: indianred;
+    }
+
     &__title {
         text-transform: lowercase;
 
