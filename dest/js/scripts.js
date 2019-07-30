@@ -106,7 +106,7 @@ function () {
         context.lineTo(this.canvas.width + this.blockSize, this.blockSize + _i);
       }
 
-      context.strokeStyle = "#3a3a3a";
+      context.strokeStyle = '#3a3a3a';
       context.stroke();
     }
   }, {
@@ -185,22 +185,25 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 var Snake = function () {
   var requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame;
+  var _concat = Array.prototype.concat;
 
-  var _concat = Array.prototype.concat,
-      _initialSpeed = 1000 / 10,
-      _objects = [],
-      isBackDirection = function isBackDirection(type, currentDirection) {
+  var _initialSpeed = 1000 / 10;
+
+  var _objects = [];
+
+  var isBackDirection = function isBackDirection(type, currentDirection) {
     return currentDirection === 'left' && type === 'right' || currentDirection === 'right' && type === 'left' || currentDirection === 'up' && type === 'down' || currentDirection === 'down' && type === 'up';
-  },
-      BUTTONS = {
+  };
+
+  var BUTTONS = {
     UP: 38,
     DOWN: 40,
     LEFT: 37,
     RIGHT: 39,
     RESET: 32
-  },
-      dX = 1,
-      dY = 1;
+  };
+  var dX = 1;
+  var dY = 1;
 
   var Snake =
   /*#__PURE__*/
@@ -224,7 +227,7 @@ var Snake = function () {
         resetAfterEnd: false,
         noLayerCollision: false
       }, options);
-      this.interval = "";
+      this.interval = '';
       this.speed = this.options.speed;
       this.direction = 'right';
       this.score = 0;
@@ -270,7 +273,7 @@ var Snake = function () {
         }
       };
 
-      document.addEventListener("keydown", checkButtons, false);
+      document.addEventListener('keydown', checkButtons, false);
     }
 
     _createClass(Snake, [{
@@ -326,7 +329,6 @@ var Snake = function () {
 
         if (!this.stoped) {
           this.update();
-          return;
         }
       }
     }, {
@@ -355,7 +357,7 @@ var Snake = function () {
         this.speed = null;
         this.food = null;
         this.score = 0;
-        this.direction = "right";
+        this.direction = 'right';
         this.addFood();
         this.init();
       }
@@ -518,7 +520,7 @@ var Snake = function () {
 
 
         if (type != null && this[type] != null) {
-          sameDirect = type === this.direction ? true : false;
+          sameDirect = type === this.direction;
 
           if (sameDirect || isBackDirection(type, this.direction)) {
             return;
@@ -542,8 +544,8 @@ var Snake = function () {
         var newHead = new Point(this.getHead().x + this.stepX, this.getHead().y + this.stepY, this.options.snakeColor);
 
         if (this.checkCollisionWithLayer(newHead) && this.options.noLayerCollision) {
-          var verticalBlockSize = this.layer.canvas.height / this.layer.blockSize,
-              horizontalBlockSize = this.layer.canvas.width / this.layer.blockSize;
+          var verticalBlockSize = this.layer.canvas.height / this.layer.blockSize;
+          var horizontalBlockSize = this.layer.canvas.width / this.layer.blockSize;
           newHead.x = newHead.x < 0 ? horizontalBlockSize - -newHead.x : Math.abs(newHead.x % horizontalBlockSize);
           newHead.y = newHead.y < 0 ? verticalBlockSize - -newHead.y : Math.abs(newHead.y % verticalBlockSize);
         }
@@ -562,7 +564,7 @@ var Snake = function () {
       value: function checkDirectionTimes() {
         if (this.changeDirection < this.limitChangeDirection) {
           this.changeDirection++;
-          console.log("Осталось попыток: ", this.limitChangeDirection - this.changeDirection);
+          console.log('Осталось попыток: ', this.limitChangeDirection - this.changeDirection);
         } else {
           this.reset();
         }
@@ -577,22 +579,22 @@ var Snake = function () {
     }, {
       key: "checkCollisionWithLayer",
       value: function checkCollisionWithLayer(head) {
-        var canvas = this.layer.canvas,
-            blockSize = this.layer.blockSize;
+        var canvas = this.layer.canvas;
+        var blockSize = this.layer.blockSize;
         return head.x * blockSize + blockSize > canvas.width || head.y * blockSize + blockSize > canvas.height || head.x < 0 || head.y < 0;
       }
     }, {
       key: "checkCollision",
       value: function checkCollision() {
-        var head = this.getHead(),
-            tail = this.getTail();
+        var head = this.getHead();
+        var tail = this.getTail();
         return this.checkItselfCollision(head, tail) || this.checkCollisionWithLayer(head) && !this.options.noLayerCollision;
       }
     }, {
       key: "generateFoodCoords",
       value: function generateFoodCoords() {
-        var maxX = this.layer.canvas.width / this.layer.blockSize,
-            maxY = this.layer.canvas.height / this.layer.blockSize;
+        var maxX = this.layer.canvas.width / this.layer.blockSize;
+        var maxY = this.layer.canvas.height / this.layer.blockSize;
         return {
           x: Util.randomMinMax(0, maxX),
           y: Util.randomMinMax(0, maxY)
@@ -657,12 +659,12 @@ window.addEventListener('DOMContentLoaded', function () {
       width: 510,
       blockSize: 15,
       renderFullBlock: false
-    }),
-        snake = new Snake(layer, {
+    });
+    var snake = new Snake(layer, {
       foodColor: 'lightgreen',
       snakeColor: 'white',
       resetAfterEnd: true,
-      noLayerCollision: false
+      noLayerCollision: true
     });
     layer.init();
     snake.init();
