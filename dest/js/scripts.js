@@ -71,7 +71,6 @@ function () {
       this.ctx = this.canvas.getContext('2d');
     } else {
       throw new Error('Browser does not support canvas API');
-      return false;
     }
   }
 
@@ -184,9 +183,6 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 var Snake = function () {
-  var requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame;
-  var _concat = Array.prototype.concat;
-
   var _initialSpeed = 1000 / 10;
 
   var _objects = [];
@@ -459,7 +455,7 @@ var Snake = function () {
     }, {
       key: "checkFood",
       value: function checkFood() {
-        return this.getHead().x == this.food.x && this.getHead().y == this.food.y;
+        return this.getHead().x === this.food.x && this.getHead().y === this.food.y;
       }
     }, {
       key: "addFood",
@@ -467,7 +463,7 @@ var Snake = function () {
         var foodCoords = this.generateFoodCoords();
 
         var foodInSnake = _objects.some(function (val, key) {
-          return val.x == foodCoords.x && val.y == foodCoords.y;
+          return val.x === foodCoords.x && val.y === foodCoords.y;
         });
 
         if (foodInSnake) {
@@ -615,10 +611,6 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-// todo: make a config with default settings
-var width = 10;
-var height = 10;
-
 var Point =
 /*#__PURE__*/
 function () {
@@ -653,6 +645,22 @@ function () {
 
 window.addEventListener('DOMContentLoaded', function () {
   try {
+    var modelReady = function modelReady() {
+      classifier.classify(function (error, result) {
+        if (error) {
+          console.log(error);
+          return;
+        }
+
+        var commands = ['left', 'down', 'up', 'right'];
+        var command = result[0].label;
+
+        if (commands.includes(command)) {
+          snake.move(command);
+        }
+      });
+    };
+
     var layer = new Layer('canvas', {
       showGrid: true,
       height: 300,
@@ -667,7 +675,12 @@ window.addEventListener('DOMContentLoaded', function () {
       noLayerCollision: true
     });
     layer.init();
-    snake.init();
+    snake.init(); // sound controller
+
+    var classifierOptions = {
+      probabilityThreshold: 0.9
+    };
+    var classifier = ml5.soundClassifier('SpeechCommands18w', classifierOptions, modelReady);
   } catch (e) {
     console.error(e);
     alert(e.message);

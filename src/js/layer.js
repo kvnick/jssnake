@@ -22,7 +22,6 @@ class Layer {
       this.ctx = this.canvas.getContext('2d')
     } else {
       throw new Error('Browser does not support canvas API')
-      return false
     }
   }
 

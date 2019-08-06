@@ -1,10 +1,4 @@
 const Snake = (() => {
-  const requestAnimationFrame =
-    window.requestAnimationFrame ||
-    window.webkitRequestAnimationFrame ||
-    window.mozRequestAnimationFrame
-
-  const _concat = Array.prototype.concat
   const _initialSpeed = 1000 / 10
   let _objects = []
   const isBackDirection = function (type, currentDirection) {
@@ -220,14 +214,14 @@ const Snake = (() => {
     }
 
     checkFood () {
-      return this.getHead().x == this.food.x &&
-                this.getHead().y == this.food.y
+      return this.getHead().x === this.food.x &&
+                this.getHead().y === this.food.y
     }
 
     addFood () {
       const foodCoords = this.generateFoodCoords()
       const foodInSnake = _objects.some((val, key) =>
-        val.x == foodCoords.x && val.y == foodCoords.y
+        val.x === foodCoords.x && val.y === foodCoords.y
       )
 
       if (foodInSnake) {

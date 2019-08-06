@@ -3,6 +3,9 @@
 ### Demo
 You can see demo [here](http://jssnake.nkorostelev.ru)
 
+### Control
+Get access to your micro and try to say **right**, **left**, **up**, **down** just for fun =)
+
 ### Usage
 
 You can use ```serve``` [https://www.npmjs.com/package/serve](https://www.npmjs.com/package/serve) to start project

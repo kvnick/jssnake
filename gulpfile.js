@@ -11,7 +11,13 @@ function styles () {
 }
 
 function js () {
-  return gulp.src(['./src/js/util.js', './src/js/layer.js', './src/js/snake.js', './src/js/point.js', './src/js/script.js'])
+  return gulp.src([
+    './src/js/util.js',
+    './src/js/layer.js',
+    './src/js/snake.js',
+    './src/js/point.js',
+    './src/js/script.js'
+  ])
     .pipe(babel({
       presets: ['@babel/env']
     }))
